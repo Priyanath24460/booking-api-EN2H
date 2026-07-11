@@ -13,23 +13,18 @@ export class UsersService {
 
     async create(user: Partial<User>): Promise<User> {
         const newUser = this.userRepository.create(user);
-
-        return await this.userRepository.save(newUser);
+        return this.userRepository.save(newUser);
     }
 
     async findByEmail(email: string): Promise<User | null> {
-        return await this.userRepository.findOne({
-            where: {
-                email,
-            },
+        return this.userRepository.findOne({
+            where: { email },
         });
     }
 
     async findById(id: number): Promise<User | null> {
-        return await this.userRepository.findOne({
-            where: {
-                id,
-            },
+        return this.userRepository.findOne({
+            where: { id },
         });
     }
 }
