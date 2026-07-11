@@ -1,98 +1,234 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# 📅 Booking API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A RESTful API built with **NestJS**, **TypeORM**, and **PostgreSQL** for managing services and customer bookings. Designed as part of the EN2H Backend Engineering Internship Technical Assessment.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+---
 
-## Description
+## 🚀 Tech Stack
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+| Technology | Purpose |
+|------------|---------|
+| NestJS | Backend framework |
+| TypeORM | ORM for database interaction |
+| PostgreSQL | Relational database |
+| JWT (Passport) | Authentication |
+| class-validator | Request body validation |
+| Swagger | Auto-generated API documentation |
 
-## Project setup
+---
 
-```bash
-$ npm install
-```
+## ✨ Features
 
-## Compile and run the project
+- **User Authentication** — Register and login with JWT tokens
+- **Service Management** — Full CRUD, protected by JWT
+- **Booking System** — Customers book services **without login**
+- **Business Rules** — Past date prevention, duplicate slot prevention, status transition validation
+- **Pagination** — Supported on `GET /services` and `GET /bookings`
+- **Global Exception Filter** — Consistent error response format
+- **Swagger Documentation** — Interactive API docs at `/api/docs`
 
-```bash
-# development
-$ npm run start
+---
 
-# watch mode
-$ npm run start:dev
+## 📋 Prerequisites
 
-# production mode
-$ npm run start:prod
-```
+- [Node.js](https://nodejs.org/) v18+
+- [PostgreSQL](https://www.postgresql.org/) v14+
+- npm v9+
 
-## Run tests
+---
+
+## ⚙️ Installation & Setup
+
+### 1. Clone the repository
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+git clone <repository-url>
+cd booking-api
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### 2. Install dependencies
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+npm install
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### 3. Configure environment variables
 
-## Resources
+```bash
+cp .env.example .env
+```
 
-Check out a few resources that may come in handy when working with NestJS:
+Open `.env` and fill in your values:
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+```env
+PORT=3000
 
-## Support
+DB_HOST=localhost
+DB_PORT=5432
+DB_USERNAME=postgres
+DB_PASSWORD=your_password
+DB_DATABASE=booking_db
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+JWT_SECRET=your_secret_key
+```
 
-## Stay in touch
+### 4. Create the PostgreSQL database
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```sql
+CREATE DATABASE booking_db;
+```
 
-## License
+> The app uses `synchronize: true` in development — TypeORM will auto-create all tables on startup.
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+### 5. Start the development server
+
+```bash
+npm run start:dev
+```
+
+Server starts at: `http://localhost:3000`  
+Swagger docs at: `http://localhost:3000/api/docs`
+
+---
+
+## 📚 API Documentation
+
+Interactive Swagger UI is available at:
+
+```
+http://localhost:3000/api/docs
+```
+
+To test protected endpoints:
+1. Use `POST /auth/login` to get a JWT token
+2. Click **Authorize** in Swagger and paste the token
+3. All protected endpoints will now include the token automatically
+
+---
+
+## 🔌 API Endpoints
+
+### Authentication
+
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| `POST` | `/auth/register` | Public | Register a new user |
+| `POST` | `/auth/login` | Public | Login and receive JWT token |
+
+### Services
+
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| `POST` | `/services` | JWT | Create a new service |
+| `GET` | `/services?page=1&limit=10` | JWT | Get all services (paginated) |
+| `GET` | `/services/:id` | JWT | Get a service by ID |
+| `PATCH` | `/services/:id` | JWT | Update a service |
+| `DELETE` | `/services/:id` | JWT | Delete a service |
+
+### Bookings
+
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| `POST` | `/bookings` | **Public** | Create a booking (no login needed) |
+| `GET` | `/bookings?status=pending&page=1&limit=10` | JWT | Get all bookings (paginated, filterable) |
+| `GET` | `/bookings/:id` | JWT | Get a booking by ID |
+| `PATCH` | `/bookings/:id/status` | JWT | Update booking status |
+| `DELETE` | `/bookings/:id` | JWT | Delete a booking |
+
+---
+
+## 📦 Example Requests
+
+### Register
+```json
+POST /auth/register
+{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "password": "secret123"
+}
+```
+
+### Create a Booking (Public)
+```json
+POST /bookings
+{
+  "customerName": "Jane Smith",
+  "customerEmail": "jane@example.com",
+  "customerPhone": "+94771234567",
+  "serviceId": 1,
+  "bookingDate": "2026-08-15",
+  "bookingTime": "10:00",
+  "notes": "Please use fragrance-free products"
+}
+```
+
+### Update Booking Status (Admin)
+```json
+PATCH /bookings/1/status
+Authorization: Bearer <token>
+{
+  "status": "confirmed"
+}
+```
+
+---
+
+## 🔒 Business Rules
+
+| Rule | Description |
+|------|-------------|
+| Past dates | Booking dates in the past are rejected with `400 Bad Request` |
+| Duplicate slots | Same service + date + time cannot be booked twice |
+| Inactive services | Bookings for inactive services are rejected |
+| Status transitions | Cancelled bookings cannot be marked as completed and vice versa |
+
+---
+
+## 🗄️ Database Schema
+
+### `users` table
+| Column | Type | Description |
+|--------|------|-------------|
+| id | int | Primary key |
+| name | varchar(100) | Full name |
+| email | varchar(150) | Unique email |
+| password | varchar | Hashed password |
+| createdAt | timestamp | Auto-set |
+
+### `services` table
+| Column | Type | Description |
+|--------|------|-------------|
+| id | int | Primary key |
+| title | varchar(150) | Service name |
+| description | text | Service description |
+| duration | int | Duration in minutes |
+| price | decimal(10,2) | Price |
+| isActive | boolean | Availability flag |
+| createdAt / updatedAt | timestamp | Auto-set |
+
+### `bookings` table
+| Column | Type | Description |
+|--------|------|-------------|
+| id | int | Primary key |
+| customerName | varchar(100) | Customer full name |
+| customerEmail | varchar(150) | Customer email |
+| customerPhone | varchar(20) | Customer phone |
+| serviceId | int | FK → services.id |
+| bookingDate | date | Date of appointment |
+| bookingTime | time | Time of appointment |
+| status | enum | pending / confirmed / cancelled / completed |
+| notes | text | Optional notes |
+| createdAt / updatedAt | timestamp | Auto-set |
+
+---
+
+## 🧪 Running Tests
+
+```bash
+# Unit tests
+npm run test
+
+# Test coverage
+npm run test:cov
+```

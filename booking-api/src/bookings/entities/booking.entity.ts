@@ -8,7 +8,6 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { User } from '../../users/entities/user.entity';
 import { Service } from '../../services/entities/service.entity';
 import { BookingStatus } from './booking-status.enum';
 
@@ -17,13 +16,17 @@ export class Booking {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => User, { eager: true, onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'userId' })
-  user: User;
+  // --- Customer Info (no login required) ---
+  @Column({ length: 100 })
+  customerName: string;
 
-  @Column()
-  userId: number;
+  @Column({ length: 150 })
+  customerEmail: string;
 
+  @Column({ length: 20 })
+  customerPhone: string;
+
+  // --- Service (what they're booking) ---
   @ManyToOne(() => Service, { eager: true, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'serviceId' })
   service: Service;
@@ -31,9 +34,14 @@ export class Booking {
   @Column()
   serviceId: number;
 
-  @Column({ type: 'timestamp' })
-  bookingDate: Date;
+  // --- Appointment details ---
+  @Column({ type: 'date' })
+  bookingDate: string;
 
+  @Column({ type: 'time' })
+  bookingTime: string;
+
+  // --- Status (defaults to pending) ---
   @Column({
     type: 'enum',
     enum: BookingStatus,
@@ -41,6 +49,7 @@ export class Booking {
   })
   status: BookingStatus;
 
+  // --- Optional notes ---
   @Column({ type: 'text', nullable: true })
   notes: string;
 

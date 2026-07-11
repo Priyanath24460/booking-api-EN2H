@@ -9,63 +9,93 @@ import {
   Query,
   UseGuards,
   ParseIntPipe,
-  Request,
 } from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+  ApiParam,
+} from '@nestjs/swagger';
 
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { BookingsService } from './bookings.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { UpdateBookingStatusDto } from './dto/update-booking-status.dto';
 import { QueryBookingDto } from './dto/query-booking.dto';
+import { PaginationDto } from '../common/dto/pagination.dto';
 
+@ApiTags('Bookings')
 @Controller('bookings')
-@UseGuards(JwtAuthGuard)
 export class BookingsController {
   constructor(private readonly bookingsService: BookingsService) {}
 
-  // POST /bookings
+  // ✅ PUBLIC — no JWT required
   @Post()
-  create(
-    @Request() req,
-    @Body() createBookingDto: CreateBookingDto,
-  ) {
-    return this.bookingsService.create(req.user.userId, createBookingDto);
+  @ApiOperation({
+    summary: 'Create a new booking (Public — no login required)',
+    description:
+      'Any customer can submit a booking. Validates service availability, prevents past dates, and blocks duplicate time slots.',
+  })
+  @ApiResponse({ status: 201, description: 'Booking created successfully' })
+  @ApiResponse({ status: 400, description: 'Validation error / duplicate slot / past date / inactive service' })
+  @ApiResponse({ status: 404, description: 'Service not found' })
+  create(@Body() createBookingDto: CreateBookingDto) {
+    return this.bookingsService.create(createBookingDto);
   }
 
-  // GET /bookings?status=pending
+  // 🔐 PROTECTED — JWT required below
   @Get()
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT-auth')
+  @ApiOperation({ summary: 'Get all bookings with optional status filter and pagination (Admin)' })
+  @ApiResponse({ status: 200, description: 'Paginated list of bookings' })
+  @ApiResponse({ status: 401, description: 'Unauthorized — JWT required' })
   findAll(
-    @Request() req,
     @Query() queryDto: QueryBookingDto,
+    @Query() paginationDto: PaginationDto,
   ) {
-    return this.bookingsService.findAll(req.user.userId, queryDto);
+    return this.bookingsService.findAll(queryDto, paginationDto);
   }
 
-  // GET /bookings/:id
   @Get(':id')
-  findOne(
-    @Request() req,
-    @Param('id', ParseIntPipe) id: number,
-  ) {
-    return this.bookingsService.findOne(id, req.user.userId);
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT-auth')
+  @ApiOperation({ summary: 'Get a single booking by ID (Admin)' })
+  @ApiParam({ name: 'id', type: Number, description: 'Booking ID' })
+  @ApiResponse({ status: 200, description: 'Booking found' })
+  @ApiResponse({ status: 404, description: 'Booking not found' })
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.bookingsService.findOne(id);
   }
 
-  // PATCH /bookings/:id/status
   @Patch(':id/status')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT-auth')
+  @ApiOperation({
+    summary: 'Update booking status (Admin)',
+    description:
+      'Allowed transitions: pending→confirmed, pending→cancelled, confirmed→completed. Cancelled bookings cannot be completed.',
+  })
+  @ApiParam({ name: 'id', type: Number, description: 'Booking ID' })
+  @ApiResponse({ status: 200, description: 'Booking status updated' })
+  @ApiResponse({ status: 400, description: 'Invalid status transition' })
+  @ApiResponse({ status: 404, description: 'Booking not found' })
   updateStatus(
-    @Request() req,
     @Param('id', ParseIntPipe) id: number,
     @Body() updateStatusDto: UpdateBookingStatusDto,
   ) {
-    return this.bookingsService.updateStatus(id, req.user.userId, updateStatusDto);
+    return this.bookingsService.updateStatus(id, updateStatusDto);
   }
 
-  // DELETE /bookings/:id
   @Delete(':id')
-  remove(
-    @Request() req,
-    @Param('id', ParseIntPipe) id: number,
-  ) {
-    return this.bookingsService.remove(id, req.user.userId);
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT-auth')
+  @ApiOperation({ summary: 'Delete a booking by ID (Admin)' })
+  @ApiParam({ name: 'id', type: Number, description: 'Booking ID' })
+  @ApiResponse({ status: 200, description: 'Booking deleted successfully' })
+  @ApiResponse({ status: 404, description: 'Booking not found' })
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.bookingsService.remove(id);
   }
 }
